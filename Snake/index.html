@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Snaky Box</title>
+</head>
+<body>
+    <div class="container">
+        <div class="recordtime">Record Time : <span id="recordtime"></span> </div>
+        <div class="timer">Time Taken by you : <span id="timer"></span> </div>
+        <div class="time">Timer : <span id="time"></span> </div>
+        <div class="snake"></div>
+        <div class="point"></div>
+        <div class="controller">
+        <button onclick="right()" style="bottom: -60px; right:70px;"> &#8592; </button>
+        <button onclick="up()" style="bottom: -40px; right: 35px;"> &#8593; </button>
+        <button onclick="left()" style="bottom: -60px; right: 0px;"> &#8594; </button>
+        <button onclick="down()" style="bottom: -80px; right: 35px;"> &#8595; </button>
+        </div>
+    </div>
+</body>
+<script>
+    var snake = document.querySelector(".snake")
+    var point = document.querySelector(".point")
+    var x = 140;  //left
+    var y = 140;  //top
+    var s = 6;    //speed
+    var size = 20;
+    var time=0;
+    var rtime =30000;
+    var vx = 0;   //velocit in x direction
+    var vy = 0;
+    var key;
+    var tx,ty;    //random position of obstacle
+    tx = 20*Math.floor(Math.random()*15);
+    ty = 20*Math.floor(Math.random()*15);
+    point.style.left = tx+'px';
+    point.style.top = ty+'px';
+    function move(e){
+        vx=2;
+        if(e.keyCode == 37){
+            vx =-s;
+            vy=0;
+        }
+        else if(e.keyCode ==38){
+            vy =-s;
+            vx=0;
+        }
+        else if(e.keyCode ==39){
+            vx=s;
+            vy=0;
+        }
+        else if(e.keyCode ==40){
+            vy=s;
+            vx=0;
+        }
+    }
+    document.addEventListener("keydown", move)
+    function right(){
+        vx =-s;
+        vy=0;
+    }
+    function up(){
+        vy =-s;
+        vx=0;
+    }
+    function left(){
+        vx=s;
+        vy=0;
+    }
+    function down(){
+        vy=s;
+        vx=0;
+    }
+
+    function game(){
+        x=x+vx;
+        y=y+vy;
+        if(x<s || x>300-size-s){vx=0;}
+        if(y<s || y>300-size-s){vy=0;}
+        snake.style.left = x+"px";
+        snake.style.top = y+"px";
+        if(x<tx+5 && x>tx-size && y<ty+5 && y>ty-size){
+            tx = 20*Math.floor(Math.random()*15);
+            ty = 20*Math.floor(Math.random()*15);
+            point.style.left = tx+'px';
+            point.style.top = ty+'px';
+            size+=10;
+            if(x+size>300){x=300-size}
+            if(y+size>290){y=300-size}
+            snake.style.width = size+'px';
+            snake.style.height = size+'px';
+        }
+        if(size>=300){
+            size=20;
+            snake.style.width = size+'px';
+            snake.style.height = size+'px';
+            document.getElementById('timer').innerHTML = time;
+            if(time < rtime){
+                rtime = time;
+                document.getElementById('recordtime').innerHTML = rtime;
+            }
+            time=0;
+        }
+    }
+    var gaming = setInterval(game, 30)
+
+    function timer(){
+        time += 1;
+        document.getElementById('time').innerHTML = time;
+    }
+    var timing = setInterval(timer,1000)
+</script>
+</html>
